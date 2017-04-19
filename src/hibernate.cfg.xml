@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/TicketRes</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.username">cez</property>
+        <property name="connection.password">qweiop123</property>
+        <mapping class="io.github.cezcz.hibernate.ActorsEntity"/>
+        <mapping class="io.github.cezcz.hibernate.CinemaHallEntity"/>
+        <mapping class="io.github.cezcz.hibernate.DirectorsEntity"/>
+        <mapping class="io.github.cezcz.hibernate.GenresEntity"/>
+        <mapping class="io.github.cezcz.hibernate.MovieDateEntity"/>
+        <mapping class="io.github.cezcz.hibernate.MovieDateReservationEntity"/>
+        <mapping class="io.github.cezcz.hibernate.MoviesEntity"/>
+        <mapping class="io.github.cezcz.hibernate.MoviesActorsEntity"/>
+        <mapping class="io.github.cezcz.hibernate.MoviesDirectorsEntity"/>
+        <mapping class="io.github.cezcz.hibernate.MoviesGenresEntity"/>
+        <mapping class="io.github.cezcz.hibernate.UserEntity"/>
+        <!-- DB schema will be updated if needed -->
+        <!-- <property name="hbm2ddl.auto">update</property> -->
+    </session-factory>
+</hibernate-configuration>
