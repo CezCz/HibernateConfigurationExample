@@ -10,8 +10,6 @@ import javax.persistence.*;
 public class MovieDateReservationEntity {
     private Integer id;
     private Integer reservedSeatNumber;
-    private Integer movieDate;
-    private Integer user;
     private UserEntity user_entity;
     private MovieDateEntity seance;
 
@@ -35,49 +33,14 @@ public class MovieDateReservationEntity {
         this.reservedSeatNumber = reservedSeatNumber;
     }
 
-    @Basic
-    @Column(name = "movie_date")
-    public Integer getMovieDate() {
-        return movieDate;
+    @ManyToOne
+    @JoinColumn(name = "movie_date", referencedColumnName = "id")
+    public MovieDateEntity getSeance() {
+        return seance;
     }
 
-    public void setMovieDate(Integer movieDate) {
-        this.movieDate = movieDate;
-    }
-
-    @Basic
-    @Column(name = "user")
-    public Integer getUser() {
-        return user;
-    }
-
-    public void setUser(Integer user) {
-        this.user = user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MovieDateReservationEntity that = (MovieDateReservationEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (reservedSeatNumber != null ? !reservedSeatNumber.equals(that.reservedSeatNumber) : that.reservedSeatNumber != null)
-            return false;
-        if (movieDate != null ? !movieDate.equals(that.movieDate) : that.movieDate != null) return false;
-        if (user != null ? !user.equals(that.user) : that.user != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (reservedSeatNumber != null ? reservedSeatNumber.hashCode() : 0);
-        result = 31 * result + (movieDate != null ? movieDate.hashCode() : 0);
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        return result;
+    public void setSeance(MovieDateEntity seance) {
+        this.seance = seance;
     }
 
     @ManyToOne
@@ -90,13 +53,30 @@ public class MovieDateReservationEntity {
         this.user_entity = user_entity;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "movie_date", referencedColumnName = "id")
-    public MovieDateEntity getSeance() {
-        return seance;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MovieDateReservationEntity that = (MovieDateReservationEntity) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (reservedSeatNumber != null ? !reservedSeatNumber.equals(that.reservedSeatNumber) : that.reservedSeatNumber != null)
+            return false;
+        if (getSeance().getDate() != null ? !getSeance().getDate().equals(that.getSeance().getDate()) : that.getSeance().getDate() != null)
+            return false;
+        if (user_entity.getId() != null ? !user_entity.getId().equals(that.user_entity.getId()) : that.user_entity.getId() != null) return false;
+
+        return true;
     }
 
-    public void setSeance(MovieDateEntity seance) {
-        this.seance = seance;
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (reservedSeatNumber != null ? reservedSeatNumber.hashCode() : 0);
+        result = 31 * result + (getSeance().getDate() != null ? getSeance().getDate().hashCode() : 0);
+        result = 31 * result + (user_entity.getId() != null ? user_entity.getId().hashCode() : 0);
+        return result;
     }
+
 }

@@ -10,21 +10,16 @@ import java.util.List;
 @Entity
 @Table(name = "movie_date", schema = "public", catalog = "TicketRes")
 public class MovieDateEntity {
-    private Integer movieId;
     private Integer id;
     private Timestamp date;
     private Integer cinemaHall;
     private List<MovieDateReservationEntity> reservations;
     private MoviesEntity movie;
 
-    @Basic
-    @Column(name = "movie_id")
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
+    @ManyToOne
+    @JoinColumn(name = "movie_id", referencedColumnName = "id")
+    public MoviesEntity getMovie() {
+        return movie;
     }
 
     @Id
@@ -64,7 +59,8 @@ public class MovieDateEntity {
 
         MovieDateEntity that = (MovieDateEntity) o;
 
-        if (movieId != null ? !movieId.equals(that.movieId) : that.movieId != null) return false;
+        if (getMovie().getId() != null ? !getMovie().getId().equals(that.getMovie().getId()) : that.getMovie().getId() != null)
+            return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (date != null ? !date.equals(that.date) : that.date != null) return false;
         if (cinemaHall != null ? !cinemaHall.equals(that.cinemaHall) : that.cinemaHall != null) return false;
@@ -74,7 +70,7 @@ public class MovieDateEntity {
 
     @Override
     public int hashCode() {
-        int result = movieId != null ? movieId.hashCode() : 0;
+        int result = getMovie().getId() != null ? getMovie().getId().hashCode() : 0;
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (cinemaHall != null ? cinemaHall.hashCode() : 0);
@@ -88,12 +84,6 @@ public class MovieDateEntity {
 
     public void setReservations(List<MovieDateReservationEntity> reservations) {
         this.reservations = reservations;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "movie_id", referencedColumnName = "id")
-    public MoviesEntity getMovie() {
-        return movie;
     }
 
     public void setMovie(MoviesEntity movie) {

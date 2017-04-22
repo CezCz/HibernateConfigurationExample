@@ -15,6 +15,7 @@ import org.hibernate.service.ServiceRegistry;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
@@ -34,15 +35,11 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private static final SessionFactory ourSessionFactory;
-    private static final ServiceRegistry serviceRegistry;
 
     static {
         try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
+            ourSessionFactory = new Configuration().configure().buildSessionFactory();
 
-            serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-            ourSessionFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);
         }
@@ -51,7 +48,6 @@ public class ReservationServiceImpl implements ReservationService {
     public static Session getSession() throws HibernateException {
         return ourSessionFactory.openSession();
     }
-
 
     @Override
     public List<MovieDateEntity> getMovies() {

@@ -8,6 +8,8 @@
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="connection.username">cez</property>
         <property name="connection.password">qweiop123</property>
+        <property name="dialect">org.hibernate.dialect.PostgreSQL94Dialect</property>
+        <property name="show_sql">true</property>
         <mapping class="io.github.cezcz.hibernate.ActorsEntity"/>
         <mapping class="io.github.cezcz.hibernate.CinemaHallEntity"/>
         <mapping class="io.github.cezcz.hibernate.DirectorsEntity"/>
