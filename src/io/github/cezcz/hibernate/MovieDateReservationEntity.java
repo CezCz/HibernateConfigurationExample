@@ -1,12 +1,13 @@
 package io.github.cezcz.hibernate;
 
+import javax.annotation.Generated;
 import javax.persistence.*;
 
 /**
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "movie_date_reservation", schema = "public", catalog = "TicketRes")
+@Table(name = "movie_date_reservation", schema = "public")
 public class MovieDateReservationEntity {
     private Integer id;
     private Integer reservedSeatNumber;
@@ -15,6 +16,7 @@ public class MovieDateReservationEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -44,7 +46,7 @@ public class MovieDateReservationEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     public UserEntity getUser_entity() {
         return user_entity;
     }
@@ -65,7 +67,8 @@ public class MovieDateReservationEntity {
             return false;
         if (getSeance().getDate() != null ? !getSeance().getDate().equals(that.getSeance().getDate()) : that.getSeance().getDate() != null)
             return false;
-        if (user_entity.getId() != null ? !user_entity.getId().equals(that.user_entity.getId()) : that.user_entity.getId() != null) return false;
+        if (user_entity.getId() != null ? !user_entity.getId().equals(that.user_entity.getId()) : that.user_entity.getId() != null)
+            return false;
 
         return true;
     }

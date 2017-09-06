@@ -1,5 +1,8 @@
 package io.github.cezcz.hibernate;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "actors", schema = "public", catalog = "TicketRes")
+@Table(name = "actors", schema = "public")
 public class ActorsEntity {
     private Integer id;
     private String name;
@@ -18,6 +21,7 @@ public class ActorsEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }

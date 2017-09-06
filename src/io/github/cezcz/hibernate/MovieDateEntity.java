@@ -1,5 +1,8 @@
 package io.github.cezcz.hibernate;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
@@ -8,11 +11,11 @@ import java.util.List;
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "movie_date", schema = "public", catalog = "TicketRes")
+@Table(name = "movie_date", schema = "public")
 public class MovieDateEntity {
     private Integer id;
     private Timestamp date;
-    private Integer cinemaHall;
+    private CinemaHallEntity cinemaHall;
     private List<MovieDateReservationEntity> reservations;
     private MoviesEntity movie;
 
@@ -24,6 +27,7 @@ public class MovieDateEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -42,13 +46,13 @@ public class MovieDateEntity {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "cinema_hall")
-    public Integer getCinemaHall() {
+    @ManyToOne
+    @JoinColumn(name = "cinema_hall", referencedColumnName = "id")
+    public CinemaHallEntity getCinemaHall() {
         return cinemaHall;
     }
 
-    public void setCinemaHall(Integer cinemaHall) {
+    public void setCinemaHall(CinemaHallEntity cinemaHall) {
         this.cinemaHall = cinemaHall;
     }
 
@@ -77,7 +81,7 @@ public class MovieDateEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "seance")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "seance")
     public List<MovieDateReservationEntity> getReservations() {
         return reservations;
     }

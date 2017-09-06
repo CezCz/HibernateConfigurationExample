@@ -1,5 +1,8 @@
 package io.github.cezcz.hibernate;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -7,7 +10,7 @@ import java.util.List;
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "User", schema = "public", catalog = "TicketRes")
+@Table(name = "user_table", schema = "public" )
 public class UserEntity {
     private String login;
     private String password;
@@ -27,7 +30,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     public String getPassword() {
         return password;
     }
@@ -37,7 +40,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     public String getName() {
         return name;
     }
@@ -58,6 +61,7 @@ public class UserEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }

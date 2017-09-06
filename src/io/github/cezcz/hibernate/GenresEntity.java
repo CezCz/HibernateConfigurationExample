@@ -1,19 +1,24 @@
 package io.github.cezcz.hibernate;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "genres", schema = "public", catalog = "TicketRes")
+@Table(name = "genres", schema = "public" )
 public class GenresEntity {
     private Integer id;
     private String name;
-    private MoviesEntity movies;
+    private List<MoviesEntity> movies;
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -52,12 +57,12 @@ public class GenresEntity {
         return result;
     }
 
-    @OneToOne(mappedBy = "genres")
-    public MoviesEntity getMovies() {
+    @ManyToMany(mappedBy = "genres")
+    public List<MoviesEntity> getMovies() {
         return movies;
     }
 
-    public void setMovies(MoviesEntity movies) {
+    public void setMovies(List<MoviesEntity> movies) {
         this.movies = movies;
     }
 }

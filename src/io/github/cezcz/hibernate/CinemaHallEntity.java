@@ -1,18 +1,22 @@
 package io.github.cezcz.hibernate;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 
 /**
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "cinema_hall", schema = "public", catalog = "TicketRes")
+@Table(name = "cinema_hall", schema = "public")
 public class CinemaHallEntity {
     private Integer id;
     private Integer seats;
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }

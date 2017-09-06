@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "movies", schema = "public", catalog = "TicketRes")
+@Table(name = "movies", schema = "public")
 public class MoviesEntity {
     private String title;
     private Integer id;
@@ -15,8 +15,8 @@ public class MoviesEntity {
     private String imagePath;
     private List<MovieDateEntity> seances;
     private List<ActorsEntity> actors;
-    private DirectorsEntity directors;
-    private GenresEntity genres;
+    private List<DirectorsEntity> directors;
+    private List<GenresEntity> genres;
 
     @Basic
     @Column(name = "title")
@@ -30,6 +30,7 @@ public class MoviesEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -92,7 +93,7 @@ public class MoviesEntity {
     }
 
     @ManyToMany
-    @JoinTable(name = "movies_actors", catalog = "TicketRes", schema = "public", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id", nullable = false))
+    @JoinTable(name = "movies_actors", schema = "public", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id", nullable = false))
     public List<ActorsEntity> getActors() {
         return actors;
     }
@@ -101,23 +102,23 @@ public class MoviesEntity {
         this.actors = actors;
     }
 
-    @OneToOne
-    @JoinTable(name = "movies_directors", catalog = "TicketRes", schema = "public", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id", nullable = false))
-    public DirectorsEntity getDirectors() {
+    @ManyToMany
+    @JoinTable(name = "movies_directors", schema = "public", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id", nullable = false))
+    public List<DirectorsEntity> getDirectors() {
         return directors;
     }
 
-    public void setDirectors(DirectorsEntity directors) {
+    public void setDirectors(List<DirectorsEntity> directors) {
         this.directors = directors;
     }
 
-    @OneToOne
-    @JoinTable(name = "movies_genres", catalog = "TicketRes", schema = "public", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id", nullable = false))
-    public GenresEntity getGenres() {
+    @ManyToMany
+    @JoinTable(name = "movies_genres", schema = "public", joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id", nullable = false))
+    public List<GenresEntity> getGenres() {
         return genres;
     }
 
-    public void setGenres(GenresEntity genres) {
+    public void setGenres(List<GenresEntity> genres) {
         this.genres = genres;
     }
 }

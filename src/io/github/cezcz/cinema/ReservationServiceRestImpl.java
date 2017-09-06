@@ -1,6 +1,6 @@
 package io.github.cezcz.cinema;
 
-import io.github.cezcz.Main;
+import io.github.cezcz.MyApplication;
 import io.github.cezcz.hibernate.CinemaHallEntity;
 import io.github.cezcz.hibernate.MovieDateEntity;
 import io.github.cezcz.hibernate.MovieDateReservationEntity;
@@ -26,28 +26,35 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.xml.ws.soap.MTOM;
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Created by Cezary on 19.04.2017.
  */
-@MTOM
-@WebService(endpointInterface = "io.github.cezcz.cinema.ReservationService")
-public class ReservationServiceImpl implements ReservationService {
+@javax.ws.rs.Path("/reservation_service")
 
-    public static Session getSession() throws HibernateException {
-        return Main.getSession();
+public class ReservationServiceRestImpl implements ReservationServiceRest {
+
+    public ReservationServiceRestImpl() {
+
     }
 
-    @Override
-    public List<MovieDateSoap> getAllMovies() {
+    public static Session getSession() throws HibernateException {
+        return MyApplication.getSession();
+    }
+
+    private List<MovieDateSoap> getAllMovies() {
         Session session = getSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 
@@ -57,7 +64,7 @@ public class ReservationServiceImpl implements ReservationService {
         Timestamp today = new Timestamp(System.currentTimeMillis());
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);
-        cal.add(Calendar.DAY_OF_WEEK, 14);
+        cal.add(Calendar.DAY_OF_WEEK, 24);
         Timestamp todayPlus14 = new Timestamp(cal.getTime().getTime());
 
         Path<Date> dateEntryPath = movieDateEntityRoot.get("date");
@@ -72,14 +79,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Image getImage(String imageName) {
+    public String getImage(String imageName) {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
         File image = new File("images/" + imageName);
         System.out.println(image.getAbsolutePath());
 
         try {
-            return ImageIO.read(image);
+            return new String(Base64.getEncoder().encode(Files.readAllBytes(Paths.get("images/" + imageName))));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,7 +95,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<MovieDateSoap> getMovies(Date date) {
+    public List<MovieDateSoap> getMovies(Long longDate) {
+        if (longDate == null) {
+            return getAllMovies();
+        }
+        Date date = new Date(longDate);
         Session session = getSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 
@@ -329,7 +340,7 @@ public class ReservationServiceImpl implements ReservationService {
         Session session = getSession();
         UserEntity userEntity = UserUtil.validateUserCredentials(user, session);
 
-        return userEntity.getReservations().stream().filter(reservation -> reservation.getSeance().getDate().after(new Timestamp(System.currentTimeMillis()))).map(movieDateReservation -> MovieDateReservationSoap.fromMoviesDateReservationEntity(movieDateReservation)).collect(Collectors.toList());
+        return userEntity.getReservations().stream().filter(reservation -> reservation.getSeance().getDate().after(new Timestamp(System.currentTimeMillis()))).map(MovieDateReservationSoap::fromMoviesDateReservationEntity).collect(Collectors.toList());
     }
 
     @Override
@@ -341,7 +352,7 @@ public class ReservationServiceImpl implements ReservationService {
         try {
             msg.message = "Reservation information";
             msg.code = Message.Codes.SUCCESS;
-            List<MovieDateReservationEntity> reservations = userEntity.getReservations().stream().filter(reservation -> reservation.getSeance().equals(reservationInfo.seanceId)).collect(Collectors.toList());
+            List<MovieDateReservationEntity> reservations = userEntity.getReservations().stream().filter(reservation -> reservation.getSeance().getId().equals(reservationInfo.seanceId)).collect(Collectors.toList());
             msg.pdf = generatePdf(reservations);
         } catch (IOException e) {
             e.printStackTrace();
@@ -350,5 +361,19 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         return msg;
+    }
+
+    @Override
+    public ReservationInfo test() {
+        ReservationInfo reservationInfo = new ReservationInfo();
+        reservationInfo.operation = ReservationInfo.OperationType.RESERVATION;
+        reservationInfo.seanceId = 1;
+        reservationInfo.user = new User();
+        reservationInfo.user.login = "cez";
+        reservationInfo.user.password = "cez";
+        reservationInfo.seats = new ArrayList<>();
+        reservationInfo.seats.add(1);
+
+        return reservationInfo;
     }
 }

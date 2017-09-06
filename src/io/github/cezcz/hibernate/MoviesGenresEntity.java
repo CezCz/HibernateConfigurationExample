@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by Cezary on 19.04.2017.
  */
 @Entity
-@Table(name = "movies_genres", schema = "public", catalog = "TicketRes")
+@Table(name = "movies_genres", schema = "public" )
 @IdClass(MoviesGenresEntityPK.class)
 public class MoviesGenresEntity {
     private Integer genreId;
